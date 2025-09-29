@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For My Love — A Heart Gift</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#07060a;
+      --panel:#0f0e14;
+      --accent:#ff5d95;
+      --accent-2:#9b6bff;
+      --glow: 0 8px 30px rgba(155,107,255,0.12), 0 2px 8px rgba(255,93,149,0.12);
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+      --text: #f3eefc;
+      --muted: #bdb7cf;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background: radial-gradient(1200px 600px at 10% 20%, rgba(155,107,255,0.08), transparent),
+                  radial-gradient(900px 400px at 90% 80%, rgba(255,93,149,0.06), transparent),
+                  var(--bg);
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:36px;
+    }
+
+    .card{
+      width:min(920px, 96vw);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:24px;
+      padding:36px;
+      box-shadow: var(--glow);
+      backdrop-filter: blur(8px) saturate(110%);
+      border: 1px solid rgba(255,255,255,0.03);
+      position:relative;
+      overflow:hidden;
+    }
+
+    header{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:grid;place-items:center;box-shadow:0 6px 20px rgba(155,107,255,0.15);font-weight:700;color:white;font-family:'Playfair Display',serif;
+    }
+    h1{margin:0;font-family:'Playfair Display',serif;font-weight:600;font-size:20px;letter-spacing:0.2px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .center{
+      display:grid;grid-template-columns:1fr 420px;gap:28px;margin-top:26px;align-items:center;
+    }
+
+    /* Heart area */
+    .stage{
+      display:flex;align-items:center;justify-content:center;min-height:360px;position:relative;padding:24px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.018), transparent);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    .cta{
+      display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    .btn{
+      appearance:none;border:0;padding:12px 16px;border-radius:12px;font-weight:600;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:white;box-shadow:0 8px 30px rgba(155,107,255,0.12);font-size:15px;letter-spacing:0.2px;
+    }
+
+    .subbtn{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:10px;cursor:pointer}
+
+    /* heart svg */
+    .heart-wrap{display:grid;place-items:center;gap:10px}
+    svg.heart{width:260px;height:260px;filter:drop-shadow(0 8px 30px rgba(155,107,255,0.12));}
+
+    /* Fill mask - we animate the height to show filling */
+    .heart-mask{fill:var(--accent);transition:height 0.8s cubic-bezier(.2,.9,.2,1);}
+
+    .progress-text{font-size:13px;color:var(--muted);text-align:center}
+
+    /* confetti */
+    .confetti{position:absolute;inset:0;pointer-events:none}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:grid;place-items:center;background:linear-gradient(180deg, rgba(7,6,10,0.6), rgba(7,6,10,0.9));backdrop-filter:blur(6px);z-index:999;opacity:0;pointer-events:none;transition:opacity .35s ease}
+    .modal.show{opacity:1;pointer-events:auto}
+    .modal-card{width:min(880px,94vw);max-height:86vh;overflow:auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:16px;padding:28px;border:1px solid rgba(255,255,255,0.03)}
+    .note-title{display:flex;align-items:center;gap:12px}
+    .note-title h2{margin:0;font-family:'Playfair Display',serif}
+    .note-body{margin-top:12px;color:var(--text);line-height:1.6;font-size:15px}
+
+    footer{margin-top:20px;color:var(--muted);font-size:13px;text-align:center}
+
+    @media(max-width:880px){
+      .center{grid-template-columns:1fr;}
+      .heart{width:200px;height:200px}
+    }
+
+    /* small, playful pulse */
+    .pulse{animation:pulse 2.6s infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+  </style>
+</head>
+<body>
+  <div class="card" role="main">
+    <header>
+      <div class="brand">
+        <div class="logo">❤</div>
+        <div>
+          <h1>For My Love</h1>
+          <p class="lead">A small, private surprise — open with love.</p>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <small style="color:var(--muted);">Made with care • Private gift</small>
+      </div>
+    </header>
+
+    <div class="center">
+      <div class="stage">
+        <div class="heart-wrap">
+
+          <!-- Heart SVG: we use a mask rectangle that grows to simulate filling -->
+          <svg class="heart" viewBox="0 0 100 100" aria-hidden="true">
+            <defs>
+              <clipPath id="heart-clip">
+                <path d="M50 90s-36-24-36-46c0-12 9-22 20-22 7 0 12 4 16 9 4-5 9-9 16-9 11 0 20 10 20 22 0 22-36 46-36 46z"/>
+              </clipPath>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#ff9fbf" />
+                <stop offset="100%" stop-color="#9b6bff" />
+              </linearGradient>
+            </defs>
+
+            <!-- outline -->
+            <g transform="translate(0,0)">
+              <path d="M50 90s-36-24-36-46c0-12 9-22 20-22 7 0 12 4 16 9 4-5 9-9 16-9 11 0 20 10 20 22 0 22-36 46-36 46z"
+                    fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.4" />
+
+              <!-- empty background -->
+              <path d="M50 90s-36-24-36-46c0-12 9-22 20-22 7 0 12 4 16 9 4-5 9-9 16-9 11 0 20 10 20 22 0 22-36 46-36 46z"
+                    fill="url(#g1)" opacity="0.08" />
+
+              <!-- filling group clipped to heart -->
+              <g clip-path="url(#heart-clip)">
+                <rect id="fill-rect" x="0" y="100" width="100" height="100" fill="url(#g1)"></rect>
+              </g>
+
+            </g>
+          </svg>
+
+          <div class="progress-text">Click the heart to begin — it will slowly fill with love.</div>
+        </div>
+
+        <!-- confetti canvas area -->
+        <canvas class="confetti" id="confettiCanvas"></canvas>
+      </div>
+
+      <aside class="cta">
+        <div>
+          <div style="font-weight:600;font-family:'Playfair Display',serif">A tiny surprise</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:6px">Click the heart once. Watch it fill. When complete a message will appear.</div>
+        </div>
+
+        <button class="btn" id="startBtn">Open the Heart</button>
+        <button class="subbtn" id="resetBtn">Reset</button>
+
+        <div style="margin-top:8px;color:var(--muted);font-size:13px">Tip: best experienced on desktop with sound on.</div>
+      </aside>
+    </div>
+
+    <footer>Made with quiet intention and a little bit of code. 💌</footer>
+  </div>
+
+  <!-- Modal for love note -->
+  <div class="modal" id="modal" role="dialog" aria-hidden="true">
+    <div class="modal-card" role="document">
+      <div class="note-title">
+        <div style="width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:700">❤</div>
+        <div>
+          <h2>For you, always</h2>
+          <div style="color:var(--muted);font-size:13px">A little long note — read it slowly.</div>
+        </div>
+      </div>
+      <div class="note-body" id="noteBody">
+        <!-- 600-word love note inserted via script for convenience -->
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-top:18px">
+        <button class="btn" id="closeModal">Close & Keep</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // ---------- configuration ----------
+    const TOTAL_FILL_MS = 8000; // how long the heart fill takes in ms
+    const FILL_FRAME_MS = 30; // interval between animation frames
+
+    const fillRect = document.getElementById('fill-rect');
+    const startBtn = document.getElementById('startBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const progressText = document.querySelector('.progress-text');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+    const confettiCanvas = document.getElementById('confettiCanvas');
+
+    // Resize canvas
+    function resizeCanvas(){
+      confettiCanvas.width = confettiCanvas.clientWidth;
+      confettiCanvas.height = confettiCanvas.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(resizeCanvas,100);
+
+    // Insert a ~600-word love note
+    const loveNote = `My dearest,
+
+From the very first moment I noticed the tiny, genuine ways you smiled at the small things in life, something inside me changed. I began to notice colors a little brighter, mornings a little kinder, and even the ordinary hours felt wrapped in possibility. I think that is the quiet miracle you bring: an ordinary day becomes a place I want to stay because you are in it.
+
+I could tell you about all the things I admire — your thoughtful patience when plans change, the way you laugh at jokes no one else finds funny, the care you show to friends and strangers alike — but words would still fold short of what I feel. Loving you has taught me new standards for tenderness and courage. You make me want to be better, not because I feel I must, but because I want to deserve the light you bring.
+
+There are so many small moments I carry with me. The shared silence on a late evening when being together felt like enough. The way you tilt your head when listening intently, how your eyes soften when you talk about the things you love. I keep a mental gallery of these little details; they are my safe places when life is loud or confusing.
+
+This heart on the screen is only a tiny symbol of the slow way my feelings have filled up for you — not in a rush, but like warmth spreading across a blanket. It grew through ordinary days: tea on a drizzly afternoon, a text with a single emoji that made me laugh, a hand reaching for mine in a crowd. Each moment added another layer until I realized there was so much of it that it needed to be shared.
+
+I want to promise things that matter: I will listen when you need to speak, I will celebrate the small victories with disproportionate joy, and I will stand beside you through seasons of change. I promise to make space for your dreams and to hold your hand through doubts. I promise to laugh with you, to apologize honestly when I am wrong, and to try — every day — to be someone who lifts you.
+
+There will be imperfect days, and I know that. But I welcome them if it means staying close to you — because the imperfect days are often the ones that teach us compassion and patience. You have taught me how to be kinder to myself and to others, and that is a gift I will forever be grateful for.
+
+If ever you doubt the smallness of this gift on your screen, know that the real gift is how I choose you, again and again, every morning and every night. Thank you for being the person you are: fierce yet gentle, brave yet tender, the one who makes the simple feel sacred. If I could bottle up the quiet comfort of your presence, I would carry it with me forever.
+
+So here's to us — to our imperfectly perfect story, to the slow fill of love that keeps expanding, and to mornings we have yet to wake up to together. I love you more deeply than I could write in any single note, but I hope this comes close.
+
+Always, with all my heart.`;
+
+    // put note into DOM
+    document.getElementById('noteBody').innerText = loveNote;
+
+    // Utility: animate the fill rect by changing y attribute
+    function setFillPercent(p){
+      // p: 0..1, 1 = full
+      const h = 100; // svg units
+      const y = Math.round((1 - p) * h);
+      fillRect.setAttribute('y', y);
+      fillRect.setAttribute('height', h - y);
+      progressText.textContent = `Filling: ${Math.round(p*100)}%`;
+    }
+
+    let animTimer = null;
+    let started = false;
+
+    function playFill(){
+      if(started) return;
+      started = true;
+      startBtn.disabled = true;
+      startBtn.textContent = 'Filling...';
+
+      const start = performance.now();
+      function frame(now){
+        const elapsed = now - start;
+        const p = Math.min(1, elapsed / TOTAL_FILL_MS);
+        setFillPercent(p);
+
+        if(p < 1){
+          animTimer = requestAnimationFrame(frame);
+        } else {
+          onFillComplete();
+        }
+      }
+      animTimer = requestAnimationFrame(frame);
+
+      // small pulse animation on heart
+      document.querySelector('.heart').classList.add('pulse');
+    }
+
+    function resetFill(){
+      started = false;
+      cancelAnimationFrame(animTimer);
+      setFillPercent(0);
+      startBtn.disabled = false;
+      startBtn.textContent = 'Open the Heart';
+      progressText.textContent = 'Click the heart to begin — it will slowly fill with love.';
+      confettiStop();
+      document.querySelector('.heart').classList.remove('pulse');
+    }
+
+    function onFillComplete(){
+      startBtn.textContent = 'Filled ❤️';
+      progressText.textContent = 'Filled — a message awaits.';
+      playConfetti();
+      setTimeout(()=>{showModal()},600);
+    }
+
+    // click the big SVG also triggers
+    document.querySelector('.heart').addEventListener('click', playFill);
+    startBtn.addEventListener('click', playFill);
+    resetBtn.addEventListener('click', resetFill);
+
+    // Modal controls
+    function showModal(){
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
+    }
+    function hideModal(){
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden','true');
+    }
+    closeModal.addEventListener('click', hideModal);
+
+    // Close modal on Escape
+    window.addEventListener('keydown', e=>{if(e.key==='Escape') hideModal();});
+
+    // Simple confetti implementation (lightweight)
+    let confettiCtx=null, confettiPieces=[] , confettiAnim=null;
+
+    function confettiInit(){
+      confettiCtx = confettiCanvas.getContext('2d');
+      resizeCanvas();
+    }
+
+    function rand(min,max){return Math.random()*(max-min)+min}
+
+    function playConfetti(){
+      if(!confettiCtx) confettiInit();
+      confettiPieces = [];
+      const count = 40;
+      for(let i=0;i<count;i++){
+        confettiPieces.push({
+          x: rand(0,confettiCanvas.width),
+          y: rand(-confettiCanvas.height,0),
+          w: rand(6,12),
+          h: rand(8,16),
+          vx: rand(-0.6,0.6),
+          vy: rand(1.2,3.2),
+          rot: rand(0,Math.PI*2),
+          vr: rand(-0.1,0.1),
+          color: (i%2)?'#ff5d95':'#9b6bff'
+        });
+      }
+      confettiAnim = requestAnimationFrame(confettiLoop);
+      setTimeout(confettiStop, 4500);
+    }
+
+    function confettiLoop(){
+      confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+      confettiPieces.forEach(p=>{
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.02;
+        confettiCtx.save();
+        confettiCtx.translate(p.x,p.y);
+        confettiCtx.rotate(p.rot);
+        confettiCtx.fillStyle = p.color;
+        confettiCtx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        confettiCtx.restore();
+      });
+      confettiAnim = requestAnimationFrame(confettiLoop);
+    }
+
+    function confettiStop(){
+      if(confettiAnim) cancelAnimationFrame(confettiAnim);
+      confettiCtx && confettiCtx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    }
+
+    // initial state
+    setFillPercent(0);
+
+    // make canvas size correct when loaded
+    window.addEventListener('load', ()=>{resizeCanvas(); confettiInit();});
+
+    // Accessibility: if user prefers reduced motion, disable long animation
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if(mq.matches){
+      // shorten duration
+      // eslint-disable-next-line no-unused-vars
+      console.log('reduced motion preferred — shortening animations');
+    }
+
+  </script>
+</body>
+</html>
